@@ -1,3 +1,6 @@
+## [2026-07-25] - Dependencias Externas
+- Actualizacion de dependencias externas a sus versiones mas recientes y compatibles.
+
 # Changelog
 
 ## 1.0.0
