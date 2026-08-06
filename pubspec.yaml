@@ -1,7 +1,7 @@
 name: neom_docs
 description: Doc generation for Flutter. Convert markdown to PDF, DOCX, and XLSX
   with cross-platform download.
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/Open-Neom/neom_docs
 repository: https://github.com/Open-Neom/neom_docs
 issue_tracker: https://github.com/Open-Neom/neom_docs/issues
@@ -21,8 +21,12 @@ dependencies:
     sdk: flutter
 
   pdf: ^3.13.0
-  excel: ^4.0.6
-  docx_to_text: ^1.0.1
+
+  # OOXML (DOCX/XLSX) handled natively via archive + xml — replaces the
+  # abandoned docx_to_text package and the excel package, whose constraints
+  # (xml <7, archive <4) conflicted with pdf ^3.13 and image ^4.9.
+  archive: ">=3.6.1 <5.0.0"
+  xml: ">=6.3.0 <8.0.0"
 
   # Logger
   sint_sentinel: ^1.1.0

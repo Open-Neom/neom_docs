@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
-import 'package:docx_to_text/docx_to_text.dart';
+import 'package:xml/xml.dart';
 
 /// Static service for converting Markdown to DOCX bytes.
 ///
@@ -20,10 +20,27 @@ import 'package:docx_to_text/docx_to_text.dart';
 class NeomDocxService {
   /// Extract plain text from DOCX bytes.
   ///
-  /// Uses the `docx_to_text` package to parse OOXML and return text content.
-  /// Useful for reading user-uploaded DOCX files before sending to an LLM.
+  /// Parses the OOXML structure directly (`word/document.xml` inside the ZIP)
+  /// and joins every `<w:t>` run per `<w:p>` paragraph — no third-party
+  /// dependency. Useful for reading user-uploaded DOCX files before sending
+  /// to an LLM.
   static String extractText(Uint8List bytes) {
-    return docxToText(bytes);
+    final archive = ZipDecoder().decodeBytes(bytes);
+    final paragraphs = <String>[];
+
+    for (final file in archive) {
+      if (file.isFile && file.name == 'word/document.xml') {
+        // archive 3.x exposes content as dynamic, 4.x as Uint8List.
+        final document = XmlDocument.parse(utf8.decode(file.content as List<int>));
+        for (final paragraph in document.findAllElements('w:p')) {
+          paragraphs.add(
+            paragraph.findAllElements('w:t').map((node) => node.innerText).join(),
+          );
+        }
+      }
+    }
+
+    return paragraphs.join('\n');
   }
 
   /// Convert markdown content to DOCX bytes.
@@ -48,6 +65,7 @@ class NeomDocxService {
     _addFile(archive, 'word/document.xml', documentXml);
 
     final encoded = ZipEncoder().encode(archive);
+    // ignore: dead_null_aware_expression — archive 3.x returns List<int>?
     return Uint8List.fromList(encoded ?? []);
   }
 

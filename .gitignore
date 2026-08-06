@@ -6,3 +6,4 @@ pubspec.lock
 .flutter-plugins-dependencies
 .idea/
 *.iml
+test/out/

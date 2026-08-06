@@ -115,9 +115,12 @@ CSV with quoted fields, escaped quotes, numeric type detection
 | Package | Purpose |
 |---------|---------|
 | `pdf` | PDF generation engine |
-| `excel` | XLSX creation |
-| `docx_to_text` | DOCX text extraction |
+| `archive` | ZIP container for OOXML (DOCX/XLSX) parts |
+| `xml` | OOXML parsing (DOCX/XLSX text extraction) |
 | `sint_sentinel` | Logger |
+
+XLSX creation and DOCX/XLSX text extraction are implemented natively over
+`archive` + `xml` (no `excel` / `docx_to_text` dependency since 1.1.0).
 
 ## License
 
