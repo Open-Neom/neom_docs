@@ -1,9 +1,10 @@
+*.iml
+.DS_Store
 .dart_tool/
-.packages
-build/
-pubspec.lock
 .flutter-plugins
 .flutter-plugins-dependencies
 .idea/
-*.iml
+.packages
+build/
+pubspec.lock
 test/out/
